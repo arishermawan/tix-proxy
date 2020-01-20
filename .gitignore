@@ -1,0 +1,5 @@
+vendor/
+application.yml
+application.yaml
+.idea/
+out/
