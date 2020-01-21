@@ -49,6 +49,46 @@ func AviatorReviewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func AviatorPhotoHandler(w http.ResponseWriter, r *http.Request) {
+	const defaultRating = "REVIEW_RATING_D"
+	query := r.URL.Query()
+	pageNo, err := strconv.Atoi(query.Get("page_no"))
+	if err != nil {
+		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New("page_no be blank"))
+		return
+	}
+	pageSize, err := strconv.Atoi(query.Get("page_size"))
+	if err != nil {
+		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New("page_size cant be blank"))
+		return
+	}
+	eventCode := query.Get("external_event_code")
+	sortOrder := query.Get("sort_order")
+	if sortOrder == "" {
+		sortOrder = defaultRating
+	}
+
+	start, finish := convertPageToRange(pageNo, pageSize)
+
+	aviator := client.NewAviatorServiceClient(config.AviatorApiKey(), config.AviatorBaseURL())
+
+	photos, err := aviator.GetEventPhotos(eventCode, defaultRating, start, finish)
+	if err != nil {
+		RawErrorResponseRenderer(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if photos.Success {
+		var photoListResponse []view.PhotoResponse
+		for _, v := range photos.Photos {
+			photoListResponse = append(photoListResponse, view.NewPhotoResponse(v))
+		}
+		ResponseRenderer(w, http.StatusOK, photoListResponse, true, nil)
+	} else {
+		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New(photos.ErrorMessageText[0]))
+	}
+}
+
 func convertPageToRange(pageNo, pageSize int) (start, finish int) {
 	start = pageNo*pageSize - (pageSize - 1)
 	finish = pageNo * pageSize

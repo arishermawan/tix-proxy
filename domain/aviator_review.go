@@ -1,16 +1,25 @@
 package domain
 
+type AviatorGenericResponse struct {
+	Success          bool     `json:"success"`
+	TotalCount       int      `json:"totalCount"`
+	DateStamp        string   `json:"dateStamp"`
+	ErrorReference   string   `json:"errorReference"`
+	ErrorName        string   `json:"errorName"`
+	ErrorType        string   `json:"errorType"`
+	ErrorCodes       []string `json:"errorCodes"`
+	ErrorMessage     []string `json:"errorMessage"`
+	ErrorMessageText []string `json:"errorMessageText"`
+}
+
 type AviatorReviewList struct {
-	Success          bool            `json:"success"`
-	Reviews          []AviatorReview `json:"data"`
-	TotalCount       int             `json:"totalCount"`
-	DateStamp        string          `json:"dateStamp"`
-	ErrorReference   string          `json:"errorReference"`
-	ErrorName        string          `json:"errorName"`
-	ErrorType        string          `json:"errorType"`
-	ErrorCodes       []string        `json:"errorCodes"`
-	ErrorMessage     []string        `json:"errorMessage"`
-	ErrorMessageText []string        `json:"errorMessageText"`
+	*AviatorGenericResponse
+	Reviews []AviatorReview `json:"data"`
+}
+
+type AviatorPhotoList struct {
+	*AviatorGenericResponse
+	Photos []AviatorPhoto `json:"data"`
 }
 
 type AviatorReview struct {
@@ -30,4 +39,25 @@ type AviatorReview struct {
 	ViatorNotes    string `json:"viatorNotes"`
 	ViatorFeedback string `json:"viatorFeedback"`
 	SslSupported   bool   `json:"sslSupported"`
+}
+
+type AviatorPhoto struct {
+	SortOrder         int         `json:"sortOrder"`
+	OwnerName         string      `json:"ownerName"`
+	OwnerID           int         `json:"ownerId"`
+	OwnerCountry      interface{} `json:"ownerCountry"`
+	ProductTitle      string      `json:"productTitle"`
+	ProductURLName    string      `json:"productUrlName"`
+	OwnerAvatarURL    interface{} `json:"ownerAvatarURL"`
+	SslSupported      bool        `json:"sslSupported"`
+	ProductCode       string      `json:"productCode"`
+	ThumbnailURL      string      `json:"thumbnailURL"`
+	Caption           string      `json:"caption"`
+	TimeUploaded      string      `json:"timeUploaded"`
+	EditorsPick       bool        `json:"editorsPick"`
+	PhotoID           int         `json:"photoId"`
+	PhotoURL          string      `json:"photoURL"`
+	PhotoHiResURL     string      `json:"photoHiResURL"`
+	PhotoMediumResURL string      `json:"photoMediumResURL"`
+	Title             string      `json:"title"`
 }

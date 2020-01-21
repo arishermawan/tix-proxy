@@ -1,9 +1,9 @@
 package view
 
 type Response struct {
-	Data    interface{} `json:"data"`
-	Success bool        `json:"success"`
-	Errors  []ErrorResponse    `json:"errors"`
+	Data    interface{}     `json:"data"`
+	Success bool            `json:"success"`
+	Errors  []ErrorResponse `json:"errors"`
 }
 
 type ErrorResponse struct {

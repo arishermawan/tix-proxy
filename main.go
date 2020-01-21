@@ -15,5 +15,6 @@ func main() {
 	router := mux.NewRouter()
 	api := router.PathPrefix("/internal/v1").Subrouter()
 	api.HandleFunc("/aviator/reviews", handler.AviatorReviewHandler).Methods(http.MethodGet)
+	api.HandleFunc("/aviator/photos", handler.AviatorPhotoHandler).Methods(http.MethodGet)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
