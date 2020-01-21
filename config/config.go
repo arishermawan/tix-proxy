@@ -3,9 +3,16 @@ package config
 import (
 	"fmt"
 	"net/url"
+	"os"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
+
+func init() {
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(os.Stdout)
+}
 
 func Load() {
 	viper.SetDefault("port", 3000)
