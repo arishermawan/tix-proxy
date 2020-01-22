@@ -94,3 +94,23 @@ func convertPageToRange(pageNo, pageSize int) (start, finish int) {
 	finish = pageNo * pageSize
 	return
 }
+
+func AviatorAvailableDateHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	eventCode := query.Get("external_event_code")
+
+	aviator := client.NewAviatorServiceClient(config.AviatorApiKey(), config.AviatorBaseURL())
+
+	dates, err := aviator.GetEventAvailableDate(eventCode)
+	if err != nil {
+		RawErrorResponseRenderer(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if dates.Success {
+		availableDateResponse := view.NewAvailableDateResponse(dates)
+		ResponseRenderer(w, http.StatusOK, availableDateResponse, true, nil)
+	} else {
+		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New(dates.ErrorMessageText[0]))
+	}
+}

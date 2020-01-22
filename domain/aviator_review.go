@@ -22,6 +22,13 @@ type AviatorPhotoList struct {
 	Photos []AviatorPhoto `json:"data"`
 }
 
+type AviatorAvailableDate struct {
+	*AviatorGenericResponse
+	AvailableDate map[string]interface{} `json:"data"`
+}
+
+type Infos map[string][]string
+
 type AviatorReview struct {
 	SortOrder      int    `json:"sortOrder"`
 	OwnerID        int    `json:"ownerId"`
