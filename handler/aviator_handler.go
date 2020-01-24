@@ -89,12 +89,6 @@ func AviatorPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func convertPageToRange(pageNo, pageSize int) (start, finish int) {
-	start = pageNo*pageSize - (pageSize - 1)
-	finish = pageNo * pageSize
-	return
-}
-
 func AviatorAvailableDateHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	eventCode := query.Get("external_event_code")
@@ -113,4 +107,30 @@ func AviatorAvailableDateHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New(dates.ErrorMessageText[0]))
 	}
+}
+
+func AviatorEventDetailHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	eventCode := query.Get("external_event_code")
+
+	aviator := client.NewAviatorServiceClient(config.AviatorApiKey(), config.AviatorBaseURL())
+
+	eventDetail, err := aviator.GetEventDetail(eventCode)
+	if err != nil {
+		RawErrorResponseRenderer(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if eventDetail.Success {
+		// availableDateResponse := view.NewAvailableDateResponse(dates)
+		ResponseRenderer(w, http.StatusOK, eventDetail.Event, true, nil)
+	} else {
+		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New(eventDetail.ErrorMessageText[0]))
+	}
+}
+
+func convertPageToRange(pageNo, pageSize int) (start, finish int) {
+	start = pageNo*pageSize - (pageSize - 1)
+	finish = pageNo * pageSize
+	return
 }

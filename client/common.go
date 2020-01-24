@@ -5,6 +5,6 @@ import(
 	"net/http"
 )
 
-func LogRequest(req *http.Request) {
-	log.Info("[AVIATOR] " + req.Method + " " + req.URL.Path)
+func LogRequest(source string, req *http.Request) {
+	log.Info(source + req.Method + " " + req.URL.Path)
 }

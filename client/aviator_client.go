@@ -13,6 +13,7 @@ type AviatorServiceClient interface {
 	GetEventReviews()
 	GetEventPhotos()
 	GetEventAvailableDate()
+	GetEventDetail()
 }
 
 type AviatorClient struct {
@@ -139,7 +140,7 @@ func (client *AviatorClient) GetEventAvailableDate(code string) (*domain.Aviator
 	query.Add("apiKey", client.AviatorApiKey)
 	req.URL.RawQuery = query.Encode()
 
-	LogRequest(req)
+	LogRequest("[AVIATOR]", req)
 
 	httpClient := &http.Client{}
 
@@ -162,4 +163,49 @@ func (client *AviatorClient) GetEventAvailableDate(code string) (*domain.Aviator
 	log.Info("[AVIATOR] Request Available Date Success")
 
 	return &date, nil
+}
+
+func (client *AviatorClient) GetEventDetail(code string) (*domain.AviatorProduct, error) {
+	path := "/service/product"
+	url, err := url.Parse(path)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	apiEndPoint := client.AviatorBaseURL.ResolveReference(url).String()
+	req, err := http.NewRequest("GET", apiEndPoint, nil)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	query := req.URL.Query()
+	query.Add("code", code)
+	query.Add("apiKey", client.AviatorApiKey)
+	req.URL.RawQuery = query.Encode()
+
+	LogRequest("[AVIATOR]", req)
+
+	httpClient := &http.Client{}
+
+	response, err := httpClient.Do(req)
+	if err != nil {
+		error := fmt.Errorf("The HTTP request failed with error %s", err.Error())
+		log.Error(error)
+		return nil, error
+	}
+
+	defer response.Body.Close()
+
+	var event domain.AviatorProduct
+	if err := json.NewDecoder(response.Body).Decode(&event); err != nil {
+		log.Error("[AVIATOR] Error when decode response")
+		log.Error(err)
+		return nil, err
+	}
+
+	log.Info("[AVIATOR] Request Event Detail Success")
+
+	return &event, nil
 }
