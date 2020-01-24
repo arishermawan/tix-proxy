@@ -39,10 +39,7 @@ func AviatorReviewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if reviews.Success {
-		var reviewListResponse []view.ReviewResponse
-		for _, v := range reviews.Reviews {
-			reviewListResponse = append(reviewListResponse, view.NewReviewResponse(v))
-		}
+		reviewListResponse := view.NewReviewListResponse(reviews.Reviews)
 		ResponseRenderer(w, http.StatusOK, reviewListResponse, true, nil)
 	} else {
 		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New(reviews.ErrorMessageText[0]))
@@ -79,10 +76,7 @@ func AviatorPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if photos.Success {
-		var photoListResponse []view.PhotoResponse
-		for _, v := range photos.Photos {
-			photoListResponse = append(photoListResponse, view.NewPhotoResponse(v))
-		}
+		photoListResponse := view.NewPhotoListResponse(photos.Photos)
 		ResponseRenderer(w, http.StatusOK, photoListResponse, true, nil)
 	} else {
 		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New(photos.ErrorMessageText[0]))

@@ -20,3 +20,11 @@ func NewReviewResponse(review domain.AviatorReview) ReviewResponse {
 		Description:   review.Review,
 		PublishedDate: review.PublishedDate}
 }
+
+func NewReviewListResponse(reviews []domain.AviatorReview) []ReviewResponse {
+	var reviewListResponse []ReviewResponse
+	for _, v := range reviews {
+		reviewListResponse = append(reviewListResponse, NewReviewResponse(v))
+	}
+	return reviewListResponse
+}

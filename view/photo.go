@@ -18,3 +18,11 @@ func NewPhotoResponse(photo domain.AviatorPhoto) PhotoResponse {
 		Title:        photo.Title,
 		TimeUploaded: photo.TimeUploaded}
 }
+
+func NewPhotoListResponse(photos []domain.AviatorPhoto) []PhotoResponse {
+	var photoListResponse []PhotoResponse
+	for _, photo := range photos {
+		photoListResponse = append(photoListResponse, NewPhotoResponse(photo))
+	}
+	return photoListResponse
+}
