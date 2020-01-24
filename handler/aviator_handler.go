@@ -116,8 +116,8 @@ func AviatorEventDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if eventDetail.Success {
-		// availableDateResponse := view.NewAvailableDateResponse(dates)
-		ResponseRenderer(w, http.StatusOK, eventDetail.Event, true, nil)
+		eventDetailResponse := view.NewEventResponse(eventDetail.Event)
+		ResponseRenderer(w, http.StatusOK, eventDetailResponse, true, nil)
 	} else {
 		RawErrorResponseRenderer(w, http.StatusUnprocessableEntity, errors.New(eventDetail.ErrorMessageText[0]))
 	}

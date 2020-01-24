@@ -1,9 +1,10 @@
 package view
 
+import "tix-proxy/domain"
+
 type EventResponse struct {
 	Name              string           `json:"name"`
 	City              string           `json:"city"`
-	Overview          string           `json:"overview"`
 	SalesPoints       []string         `json:"sales_points"`
 	AdditionalInfo    []string         `json:"additional_info"`
 	Reviews           []ReviewResponse `json:"reviews"`
@@ -20,4 +21,20 @@ type ProductPhotos struct {
 	Photo    string `json:"photo"`
 	Caption  string `json:"caption"`
 	Supplier string `json:"supplier"`
+}
+
+func NewEventResponse(product domain.AviatorEventDetail) EventResponse {
+	return EventResponse{
+		Name:              product.SupplierName,
+		City:              product.City,
+		SalesPoints:       product.SalesPoints,
+		AdditionalInfo:    product.AdditionalInfo,
+		Reviews:           NewReviewListResponse(product.Reviews),
+		Photos:            NewPhotoListResponse(product.UserPhotos),
+		TermsAndCondition: product.TermsAndConditions,
+		Inclusions:        product.Inclusions,
+		Exclusions:        product.Exclusions,
+		DepartureTime:     product.DepartureTime,
+		DeparturePoint:    product.DeparturePoint,
+	}
 }
